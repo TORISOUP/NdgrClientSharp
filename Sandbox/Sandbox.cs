@@ -1,34 +1,20 @@
 ﻿using System;
+using System.Linq;
+using System.Net.Http;
+using Dwango.Nicolive.Chat.Service.Edge;
 using NdgrClientSharp;
 using NdgrClientSharp.NdgrApi;
 using R3;
 
 var viewApiUri = "";
 
-using var ndgrApiClient = new NdgrApiClient();
+using var ndgrSnapshotFetcher = new NdgrSnapshotFetcher();
 
-using var pastClient = new NdgrPastCommentFetcher(ndgrApiClient);
-
-var pastComments = pastClient.FetchPastComments(viewApiUri, 100);
-await pastComments.ForEachAsync(x => Console.WriteLine(x));
-
-Console.WriteLine("---");
-
-using var snapshotClient = new NdgrSnapshotFetcher(ndgrApiClient);
-
-var snapshotComments = snapshotClient.FetchCurrentSnapshotAsync(viewApiUri, default);
-await foreach (var snapshotComment in snapshotComments)
+// 現在の状態（運営コメントの設定やアンケートの状態）を取得する
+await foreach (var chunkedMessage in ndgrSnapshotFetcher.FetchCurrentSnapshotAsync(viewApiUri))
 {
-    Console.WriteLine(snapshotComment);
+    Console.WriteLine(chunkedMessage);
 }
 
-Console.WriteLine("---");
 
-using var liveClient = new NdgrLiveCommentFetcher(ndgrApiClient);
 
-liveClient.OnNicoliveCommentReceived.Subscribe(x => Console.WriteLine(x));
-liveClient.Connect(viewApiUri);
-
-Console.ReadLine();
-
-liveClient.Disconnect();

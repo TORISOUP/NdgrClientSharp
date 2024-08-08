@@ -32,7 +32,7 @@ namespace NdgrClientSharp
                 _needDisposeNdgrApiClient = false;
             }
         }
-
+        
         /// <summary>
         /// 過去のコメントを取得する
         /// </summary>

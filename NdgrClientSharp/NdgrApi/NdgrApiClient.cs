@@ -47,6 +47,7 @@ namespace NdgrClientSharp.NdgrApi
         /// <summary>
         /// コメント取得の起点
         /// GET /api/view/v4/:view?at=now を実行して、次のコメント取得のための情報を取得する
+        /// クエリパラメータはTrimしてから実行するため含まれていても問題ない
         /// </summary>
         public async ValueTask<ReadyForNext> FetchViewAtNowAsync(string viewApiUri, CancellationToken token = default)
         {

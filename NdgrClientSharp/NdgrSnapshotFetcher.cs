@@ -34,7 +34,7 @@ namespace NdgrClientSharp
         /// </summary>
         public async IAsyncEnumerable<ChunkedMessage> FetchCurrentSnapshotAsync(
             string viewUri,
-            [EnumeratorCancellation] CancellationToken token)
+            [EnumeratorCancellation] CancellationToken token =default)
         {
             lock (_gate)
             {
