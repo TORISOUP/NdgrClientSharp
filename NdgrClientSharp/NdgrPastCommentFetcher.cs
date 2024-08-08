@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Dwango.Nicolive.Chat.Service.Edge;
+using NdgrClientSharp.NdgrApi;
 using R3;
 
-namespace NdgrClientSharp.NdgrApi
+namespace NdgrClientSharp
 {
     /// <summary>
     /// 過去のコメントを取得する

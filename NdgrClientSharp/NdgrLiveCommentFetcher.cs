@@ -3,9 +3,10 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Dwango.Nicolive.Chat.Service.Edge;
+using NdgrClientSharp.NdgrApi;
 using R3;
 
-namespace NdgrClientSharp.NdgrApi
+namespace NdgrClientSharp
 {
     /// <summary>
     /// ニコ生の生放送中のコメントを取得する

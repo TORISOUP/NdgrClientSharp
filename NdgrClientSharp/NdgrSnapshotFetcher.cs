@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using Dwango.Nicolive.Chat.Service.Edge;
+using NdgrClientSharp.NdgrApi;
 
-namespace NdgrClientSharp.NdgrApi
+namespace NdgrClientSharp
 {
     public sealed class NdgrSnapshotFetcher : IDisposable
     {
