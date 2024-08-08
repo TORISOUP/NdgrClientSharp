@@ -47,7 +47,7 @@ namespace NdgrClientSharp.NdgrApi
 
         private CancellationTokenSource? _mainCts;
         private bool _isDisposed;
-        
+
         // サーバ時刻とローカル時刻の差分
         private int _offsetSeconds = 0;
         private string _latestViewApiUri = string.Empty;
@@ -170,7 +170,7 @@ namespace NdgrClientSharp.NdgrApi
                 {
                     // 次の取得するべきViewのunixtimeを取得
                     var next = await _ndgrApiClient.FetchViewAtNowAsync(viewApiUri, ct);
-                    
+
                     if (_connectionStatus.Value == ConnectionState.Connecting)
                     {
                         // 取得成功したら接続済にする
@@ -180,7 +180,7 @@ namespace NdgrClientSharp.NdgrApi
                     // サーバ時刻とローカル時刻の差分を保存して補正できるようにしておく
                     _offsetSeconds = (int)(next.At - _timeProvider.GetUtcNow().ToUnixTimeSeconds());
 
-                    
+
                     // コメント取得のためのSegmentおよびNextの取得処理
                     Forget(FetchViewAsync(viewApiUri, next.At, ct));
                     return;
@@ -205,6 +205,7 @@ namespace NdgrClientSharp.NdgrApi
                     else
                     {
                         // 503以外のエラーはリトライしない
+                        Disconnect();
                         return;
                     }
                 }
@@ -218,6 +219,7 @@ namespace NdgrClientSharp.NdgrApi
                         }
                     }
 
+                    Disconnect();
                     return;
                 }
             } while (++tryCount <= MaxRetryCount);

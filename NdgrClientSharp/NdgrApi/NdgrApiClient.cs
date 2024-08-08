@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Dwango.Nicolive.Chat.Service.Edge;
 using NdgrClientSharp.Utilities;
 using ReadyForNext = Dwango.Nicolive.Chat.Service.Edge.ChunkedEntry.Types.ReadyForNext;
-using StateSnapshot = Dwango.Nicolive.Chat.Service.Edge.PackedSegment.Types.StateSnapshot;
 
 namespace NdgrClientSharp.NdgrApi
 {

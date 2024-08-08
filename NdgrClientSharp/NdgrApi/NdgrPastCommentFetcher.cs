@@ -57,7 +57,7 @@ namespace NdgrClientSharp.NdgrApi
 
                     var now = await _ndgrApiClient.FetchViewAtNowAsync(viewApiUri, token);
                     var previous = new List<MessageSegment>();
-                    BackwardSegment backward = null;
+                    BackwardSegment? backward = null;
 
                     await foreach (var chunkedEntry in _ndgrApiClient.FetchViewAtAsync(viewApiUri, now.At, token))
                     {
