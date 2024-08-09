@@ -121,7 +121,7 @@ httpClient.Dispose();
 
 ニコニコ生放送の放送中のコメントをリアルタイムに取得するクライアントです。
 
-`Observable<ChunckedMessage>`としてコメントを取得できます。
+`OnMessageReceived`から`Observable<ChunckedMessage>`としてコメントを取得できます。
 
 ```cs
 // 生放送コメント取得用のクライアントを生成
@@ -129,7 +129,7 @@ var liveCommentFetcher = new NdgrLiveCommentFetcher();
 
 // コメントの受信準備
 liveCommentFetcher
-    .OnNicoliveCommentReceived
+    .OnMessageReceived
     .Subscribe(chukedMessage =>
     {
         switch (chukedMessage.PayloadCase)
@@ -162,15 +162,16 @@ liveCommentFetcher.Dispose();
 
 #### 補足1:メッセージの発行スレッド
 
-最終的には`ConfigureAwait(true)`として動作します。そのため`Connect()`したときの同じスレッドでメッセージ発行される**はず**です。
+`ConfigureAwait(true)`として動作します。そのため`Connect()`したときの同じスレッドでメッセージ発行される**はず**です。
 
-もしUnityなどで利用する場合は`ObserveOnMainThread`を保険として挟んでおくのはありかもしれません。
+ただもしスレッドを確実に指定したい場合、たとえばUnityなどでは`ObserveOnMainThread`を保険として挟んでおくのはありかもしれません。
+
 ```cs
 // Unityで使う場合
 // R3.UnityのObserveOnMainThreadを使うことで
 // 確実にUnityメインスレッドで受信できる
 liveCommentFetcher
-    .OnNicoliveCommentReceived
+    .OnMessageReceived
     // これ
     .ObserveOnMainThread()
     .Subscribe(chukedMessage =>
@@ -214,7 +215,7 @@ httpClient.Dispose();
 
 ```cs
 liveCommentFetcher
-    .OnNicoliveCommentReceived
+    .OnMessageReceived
     .Subscribe(
         onNext: chukedMessage => Console.WriteLine(chukedMessage),
         onErrorResume: ex => Console.WriteLine(ex),
@@ -262,7 +263,25 @@ liveCommentFetcher.ConnectionStatus
 Console.WriteLine(liveCommentFetcher.ConnectionStatus.CurrentValue);
 ```
 
-**なお番組が終了してコメントが尽きたとしても接続状態は自動でDisconnectにはなりません。**
+#### 補足6: 番組終了時の挙動
+
+放送中の番組に対して`Connect()`していた場合、**番組が終了しても自動でDisconnectはしません。**
+もし番組が終了を検知して`Disconnect()`したい場合は`OnProgramEnded`を購読して発行されるイベントを利用してください。
+
+```cs
+using var ndgrLiveCommentFetcher = new NdgrLiveCommentFetcher();
+ndgrLiveCommentFetcher.Connect(viewApiUri);
+
+// 番組が終了時にイベントが発行される
+// それのイベントを受けてDisconnectする
+ndgrLiveCommentFetcher
+    .OnProgramEnded
+    .Subscribe(_ => ndgrLiveCommentFetcher.Disconnect());
+```
+
+
+なお、すでに終了済みの番組に対して`Connect()`をした場合、`OnProgramEnded`は発行されません。
+番組状態を別のAPI(`programInfo`など)で取得し、放送中であることを確認してから`Connect()`してください。
 
 ### NdgrPastCommentFetcher
 
@@ -281,7 +300,7 @@ pastCommentFetcher
 pastCommentFetcher.Dispose();
 ```
 
-`FetchPastComments()`の引数としてコメントの件数が指定できます。ただしこの引数は**最低でもこの件数を取得する**という挙動をします（コメント取得はある程度まとまった単位で実行されるため、指定した個数ピッタリ取得することができないため。）
+`FetchPastComments()`の引数としてコメントの件数が指定できます。ただしこの引数は**最低でもこの件数を取得する**という挙動をします（コメント取得はある程度まとまった単位で実行されるため、指定した個数ピッタリ取得することができない。）
 
 またこの引数にnullを指定した場合は過去のコメントをすべて取得します。
 
