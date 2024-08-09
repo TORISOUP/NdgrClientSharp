@@ -68,7 +68,7 @@ NDGRと通信するためのAPIクライアントです。NDGRのAPIとの通信
 
 自身でNDGRとの通信を細かく制御したい場合に使用してください。
 
-```cs:使用例
+```cs
 // 初期化
 using (var ndgrApiClient = new NdgrApiClient())
 {
