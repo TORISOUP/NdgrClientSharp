@@ -13,7 +13,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Bcl.TimeProvider" Version="8.0.0" />
       <PackageReference Include="R3" Version="1.2.*" />
     </ItemGroup>
 
