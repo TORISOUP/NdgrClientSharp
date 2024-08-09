@@ -58,8 +58,7 @@ namespace NdgrClientSharp.NdgrApi
 
             var response = await _httpClient.GetAsync(
                     $"{uri}?at=now",
-                    HttpCompletionOption.ResponseHeadersRead, ct)
-                .ConfigureAwait(false);
+                    HttpCompletionOption.ResponseHeadersRead, ct);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -82,7 +81,6 @@ namespace NdgrClientSharp.NdgrApi
         /// <summary>
         /// 指定時刻付近のコメント取得のための情報を取得する
         /// backward,previous,segment,nextが非同期的に返ってくる
-        /// クエリパラメータはTrimしてから実行するため含まれていても問題ない
         /// </summary>
         public async IAsyncEnumerable<ChunkedEntry> FetchViewAtAsync(string viewApiUri,
             long unixTime,
@@ -94,8 +92,7 @@ namespace NdgrClientSharp.NdgrApi
             var response =
                 await _httpClient.GetAsync(
                         $"{uri}?at={unixTime}",
-                        HttpCompletionOption.ResponseHeadersRead, ct)
-                    .ConfigureAwait(false);
+                        HttpCompletionOption.ResponseHeadersRead, ct);
             ;
 
             if (!response.IsSuccessStatusCode)
@@ -124,7 +121,7 @@ namespace NdgrClientSharp.NdgrApi
         {
             var ct = CreateLinkedToken(token);
 
-            await using var response = await _httpClient.GetStreamAsync(apiUri).ConfigureAwait(false);
+            await using var response = await _httpClient.GetStreamAsync(apiUri);
             await foreach (var chunk in ReadProtoBuffBytesAsync(response, ct))
             {
                 var message = ChunkedMessage.Parser.ParseFrom(chunk);
@@ -140,8 +137,7 @@ namespace NdgrClientSharp.NdgrApi
             CancellationToken token = default)
         {
             var ct = CreateLinkedToken(token);
-            var response = await _httpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, ct)
-                .ConfigureAwait(false);
+            var response = await _httpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, ct);
             response.EnsureSuccessStatusCode();
             var message = PackedSegment.Parser.ParseFrom(await response.Content.ReadAsStreamAsync());
             return message;
@@ -160,8 +156,7 @@ namespace NdgrClientSharp.NdgrApi
             var buffer = new byte[2048];
             while (true)
             {
-                var read = await reader.BaseStream.ReadAsync(buffer, 0, buffer.Length, ct)
-                    .ConfigureAwait(false);
+                var read = await reader.BaseStream.ReadAsync(buffer, 0, buffer.Length, ct);
                 if (read == 0)
                 {
                     yield break;
