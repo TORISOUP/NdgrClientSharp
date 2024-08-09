@@ -82,6 +82,7 @@ namespace NdgrClientSharp.NdgrApi
         /// <summary>
         /// 指定時刻付近のコメント取得のための情報を取得する
         /// backward,previous,segment,nextが非同期的に返ってくる
+        /// クエリパラメータはTrimしてから実行するため含まれていても問題ない
         /// </summary>
         public async IAsyncEnumerable<ChunkedEntry> FetchViewAtAsync(string viewApiUri,
             long unixTime,

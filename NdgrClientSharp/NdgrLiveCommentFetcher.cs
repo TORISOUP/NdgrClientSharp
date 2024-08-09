@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Dwango.Nicolive.Chat.Data;
 using Dwango.Nicolive.Chat.Service.Edge;
 using NdgrClientSharp.NdgrApi;
 using R3;
@@ -20,6 +21,12 @@ namespace NdgrClientSharp
         /// ・DisposeするとOnCompletedが発行される
         /// </summary>
         public Observable<ChunkedMessage> OnMessageReceived => _messageSubject;
+
+        /// <summary>
+        /// 番組が終了したことを通知する
+        /// すでに終了済みの番組については発火しない
+        /// </summary>
+        public Observable<Unit> OnProgramEnded { get; }
 
         /// <summary>
         /// 接続状態
@@ -74,6 +81,11 @@ namespace NdgrClientSharp
             }
 
             _timeProvider = timeProvider ?? TimeProvider.System;
+
+            OnProgramEnded = _messageSubject
+                .Where(x => x.State?.ProgramStatus?.State is ProgramStatus.Types.State.Ended)
+                .AsUnitObservable()
+                .Share();
         }
 
 
