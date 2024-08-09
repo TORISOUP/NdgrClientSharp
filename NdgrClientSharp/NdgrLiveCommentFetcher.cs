@@ -19,7 +19,7 @@ namespace NdgrClientSharp
         /// ・DisconnectしてもOnCompletedは発行されない
         /// ・DisposeするとOnCompletedが発行される
         /// </summary>
-        public Observable<ChunkedMessage> OnNicoliveCommentReceived => _nicoliveCommentSubject;
+        public Observable<ChunkedMessage> OnMessageReceived => _messageSubject;
 
         /// <summary>
         /// 接続状態
@@ -39,7 +39,7 @@ namespace NdgrClientSharp
 
         private readonly INdgrApiClient _ndgrApiClient;
         private readonly object _gate = new object();
-        private readonly Subject<ChunkedMessage> _nicoliveCommentSubject = new Subject<ChunkedMessage>();
+        private readonly Subject<ChunkedMessage> _messageSubject = new Subject<ChunkedMessage>();
         private readonly TimeProvider _timeProvider;
         private readonly bool _needDisposeNdgrApiClient;
 
@@ -52,6 +52,7 @@ namespace NdgrClientSharp
         // サーバ時刻とローカル時刻の差分
         private int _offsetSeconds = 0;
         private string _latestViewApiUri = string.Empty;
+        private uint _fetchingSegmentCount = 0;
 
         /// <summary>
         /// ローカルPCの時刻のズレを補正し、サーバ側に合わせた時刻
@@ -93,6 +94,7 @@ namespace NdgrClientSharp
                 _mainCts = new CancellationTokenSource();
                 _connectionStatus.Value = ConnectionState.Connecting;
                 _latestViewApiUri = viewApiUri;
+                _fetchingSegmentCount = 0;
 
                 // 取得処理開始
                 Forget(FetchStartAsync(viewApiUri, _mainCts.Token));
@@ -112,6 +114,7 @@ namespace NdgrClientSharp
                 _mainCts?.Dispose();
                 _mainCts = null;
                 _connectionStatus.Value = ConnectionState.Disconnected;
+                _fetchingSegmentCount = 0;
             }
         }
 
@@ -154,7 +157,7 @@ namespace NdgrClientSharp
                     _ndgrApiClient.Dispose();
                 }
 
-                _nicoliveCommentSubject.Dispose();
+                _messageSubject.Dispose();
                 _connectionStatus.Dispose();
             }
         }
@@ -180,10 +183,9 @@ namespace NdgrClientSharp
 
                     // サーバ時刻とローカル時刻の差分を保存して補正できるようにしておく
                     _offsetSeconds = (int)(next.At - _timeProvider.GetUtcNow().ToUnixTimeSeconds());
-
-
+                    
                     // コメント取得のためのSegmentおよびNextの取得処理
-                    Forget(FetchViewAsync(viewApiUri, next.At, ct));
+                    Forget(FetchLoopAsync(viewApiUri, next.At, ct));
                     return;
                 }
                 catch (OperationCanceledException)
@@ -195,7 +197,7 @@ namespace NdgrClientSharp
                 {
                     lock (_gate)
                     {
-                        _nicoliveCommentSubject.OnErrorResume(ex);
+                        _messageSubject.OnErrorResume(ex);
                     }
 
                     // 503だったときはちょっとまってリトライしてみる
@@ -214,9 +216,9 @@ namespace NdgrClientSharp
                 {
                     lock (_gate)
                     {
-                        if (!_nicoliveCommentSubject.IsDisposed)
+                        if (!_messageSubject.IsDisposed)
                         {
-                            _nicoliveCommentSubject.OnErrorResume(ex);
+                            _messageSubject.OnErrorResume(ex);
                         }
                     }
 
@@ -233,37 +235,57 @@ namespace NdgrClientSharp
         /// <summary>
         /// コメント取得のためのSegmentおよびNextの取得処理
         /// </summary>
-        private async ValueTask FetchViewAsync(string viewApiUri, long unixTime, CancellationToken ct)
+        private async ValueTask FetchLoopAsync(string viewApiUri, long unixTime, CancellationToken ct)
         {
+            var targetTime = unixTime;
             try
             {
-                var chunks = _ndgrApiClient.FetchViewAtAsync(viewApiUri, unixTime, ct);
-                // SegmentおよびNextの監視
-                await foreach (var chunk in chunks)
+                while (!ct.IsCancellationRequested)
                 {
-                    switch (chunk.EntryCase)
+                    var hasNext = false;
+                    var chunks = _ndgrApiClient.FetchViewAtAsync(viewApiUri, targetTime, ct);
+                    // SegmentおよびNextの監視
+                    await foreach (var chunk in chunks)
                     {
-                        case ChunkedEntry.EntryOneofCase.Segment:
-                            // Segment（コメント本文を返すAPI情報）
-                            var segment = chunk.Segment;
-                            Forget(FetchSegmentAsync(segment, ct));
+                        switch (chunk.EntryCase)
+                        {
+                            case ChunkedEntry.EntryOneofCase.Segment:
+                                // Segment（コメント本文を返すAPI情報）
+                                var segment = chunk.Segment;
+                                Forget(FetchSegmentAsync(segment, ct));
 
-                            break;
-                        case ChunkedEntry.EntryOneofCase.Next:
+                                break;
+                            case ChunkedEntry.EntryOneofCase.Next:
 
-                            // 次のView取得情報
-                            Forget(FetchViewAsync(viewApiUri, chunk.Next.At, ct));
+                                // 次のView取得情報
+                                targetTime = chunk.Next.At;
+                                hasNext = true;
+                                break;
 
-                            break;
+                            // 未使用
+                            case ChunkedEntry.EntryOneofCase.None:
+                            case ChunkedEntry.EntryOneofCase.Backward:
+                            case ChunkedEntry.EntryOneofCase.Previous:
+                                break;
 
-                        // 未使用
-                        case ChunkedEntry.EntryOneofCase.None:
-                        case ChunkedEntry.EntryOneofCase.Backward:
-                        case ChunkedEntry.EntryOneofCase.Previous:
-                            break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                    }
 
-                        default:
-                            throw new ArgumentOutOfRangeException();
+                    ct.ThrowIfCancellationRequested();
+
+                    if (!hasNext)
+                    {
+                        // Nextがない場合はSegmentの全受信を待ってから終了
+                        
+                        while (_fetchingSegmentCount > 0)
+                        {
+                            ct.ThrowIfCancellationRequested();
+                            await Task.Yield();
+                        }
+
+                        Disconnect();
                     }
                 }
             }
@@ -275,9 +297,9 @@ namespace NdgrClientSharp
             {
                 lock (_gate)
                 {
-                    if (!_nicoliveCommentSubject.IsDisposed)
+                    if (!_messageSubject.IsDisposed)
                     {
-                        _nicoliveCommentSubject.OnErrorResume(e);
+                        _messageSubject.OnErrorResume(e);
                     }
 
                     switch (e.HttpStatusCode)
@@ -298,9 +320,9 @@ namespace NdgrClientSharp
                 // エラーを発行してDisconnect
                 lock (_gate)
                 {
-                    if (!_nicoliveCommentSubject.IsDisposed)
+                    if (!_messageSubject.IsDisposed)
                     {
-                        _nicoliveCommentSubject.OnErrorResume(e);
+                        _messageSubject.OnErrorResume(e);
                     }
                 }
 
@@ -312,6 +334,8 @@ namespace NdgrClientSharp
         {
             try
             {
+                _fetchingSegmentCount++;
+
                 // この時刻以降のコメント情報が取得できる
                 // ただし滑らかなコメント受信のためにはFromの1秒くらい前にprefetchしておく必要がある
                 var from = segment.From.ToDateTimeOffset();
@@ -334,7 +358,7 @@ namespace NdgrClientSharp
                 {
                     lock (_gate)
                     {
-                        _nicoliveCommentSubject.OnNext(chunkedMessage);
+                        _messageSubject.OnNext(chunkedMessage);
                     }
                 }
             }
@@ -346,12 +370,16 @@ namespace NdgrClientSharp
             {
                 lock (_gate)
                 {
-                    if (!_nicoliveCommentSubject.IsDisposed)
+                    if (!_messageSubject.IsDisposed)
                     {
-                        _nicoliveCommentSubject.OnErrorResume(e);
+                        _messageSubject.OnErrorResume(e);
                     }
                 }
                 // Segmentは取得失敗しても継続する
+            }
+            finally
+            {
+                _fetchingSegmentCount--;
             }
         }
 
@@ -370,9 +398,9 @@ namespace NdgrClientSharp
             {
                 lock (_gate)
                 {
-                    if (!_nicoliveCommentSubject.IsDisposed)
+                    if (!_messageSubject.IsDisposed)
                     {
-                        _nicoliveCommentSubject.OnErrorResume(e);
+                        _messageSubject.OnErrorResume(e);
                     }
                 }
             }

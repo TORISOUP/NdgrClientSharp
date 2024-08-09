@@ -1,5 +1,7 @@
 using System.Net;
+using Dwango.Nicolive.Chat.Data;
 using Dwango.Nicolive.Chat.Service.Edge;
+using Google.Protobuf.WellKnownTypes;
 using Moq;
 using NdgrClientSharp.NdgrApi;
 using R3;
@@ -8,6 +10,108 @@ namespace NdgrClientSharp.Test;
 
 public sealed class NdgrLiveCommentFetcherSpec
 {
+    [Test, Timeout(5000)]
+    public async Task メッセージを受信しきったらDisconnectする()
+    {
+        var apiClientMock = new Mock<INdgrApiClient>();
+
+        apiClientMock
+            .Setup(x =>
+                x.FetchViewAtNowAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .Returns(new ValueTask<ChunkedEntry.Types.ReadyForNext>(
+                new ChunkedEntry.Types.ReadyForNext
+                {
+                    At = 0
+                }
+            ));
+
+        apiClientMock
+            .Setup(x =>
+                x.FetchChunkedMessagesAsync("segment_1", It.IsAny<CancellationToken>()))
+            .Returns(CreateChunkedMessagesAsync(TimeSpan.FromMilliseconds(100), "1", "2", "3"));
+
+        apiClientMock
+            .Setup(x =>
+                x.FetchChunkedMessagesAsync("segment_2", It.IsAny<CancellationToken>()))
+            .Returns(CreateChunkedMessagesAsync(TimeSpan.FromMilliseconds(100), "4", "5", "6"));
+
+        apiClientMock
+            .Setup(x => x.FetchViewAtAsync(It.IsAny<string>(), 0, It.IsAny<CancellationToken>()))
+            .Returns(new[]
+            {
+                new ChunkedEntry()
+                {
+                    Segment = new MessageSegment()
+                    {
+                        Uri = "segment_1",
+                        From = new Timestamp()
+                        {
+                            Seconds = 0 // 時間としてはめちゃくちゃだが処理は進むからOK
+                        }
+                    }
+                },
+                // 1回目はNextがある
+                new ChunkedEntry()
+                {
+                    Next = new ChunkedEntry.Types.ReadyForNext()
+                    {
+                        At = 1
+                    }
+                }
+            }.ToAsyncEnumerable());
+
+        apiClientMock
+            .Setup(x => x.FetchViewAtAsync(It.IsAny<string>(), 1, It.IsAny<CancellationToken>()))
+            .Returns(new[]
+            {
+                // 2回目はNextがない
+                new ChunkedEntry()
+                {
+                    Segment = new MessageSegment()
+                    {
+                        Uri = "segment_2",
+                        From = new Timestamp()
+                        {
+                            Seconds = 0 // 時間としてはめちゃくちゃだが処理は進むからOK
+                        }
+                    }
+                }
+            }.ToAsyncEnumerable());
+
+        var fetcher = new NdgrLiveCommentFetcher(apiClientMock.Object);
+
+        // 結果の保持用
+        var list = fetcher.OnMessageReceived.Select(x => x.Message.Chat.Content).ToLiveList();
+        var statusList = fetcher.ConnectionStatus.ToLiveList();
+
+        // 取得開始
+        fetcher.Connect("test");
+        
+        // Disconnectされるまで待つ
+        await fetcher.ConnectionStatus
+            .Where(x => x == ConnectionState.Disconnected)
+            .FirstAsync();
+
+        Assert.Multiple(() =>
+        {
+            // Segmentの時間が適当なのでメッセージは意図した順番ではこない
+            // ただしここでは全メッセージが受信できていることさえ見れれば良い
+            CollectionAssert.AreEqual(new[] { "1", "2", "3", "4", "5", "6" }, list.Order());
+
+            // 切断まで進んでいるはず
+            CollectionAssert.AreEqual(
+                new[]
+                {
+                    ConnectionState.Disconnected,
+                    ConnectionState.Connecting,
+                    ConnectionState.Connected,
+                    ConnectionState.Disconnected,
+                }, statusList
+            );
+        });
+    }
+
+
     [Test, Timeout(1000)]
     public async Task 最初の取得時にServiceUnavailableのときは上限までリトライする()
     {
@@ -28,7 +132,7 @@ public sealed class NdgrLiveCommentFetcherSpec
         fetcher.RetryInterval = TimeSpan.FromMilliseconds(0);
 
         // 結果の保持用
-        var list = fetcher.OnNicoliveCommentReceived.Materialize().ToLiveList();
+        var list = fetcher.OnMessageReceived.Materialize().ToLiveList();
 
         // 取得開始
         fetcher.Connect("");
@@ -62,7 +166,7 @@ public sealed class NdgrLiveCommentFetcherSpec
         fetcher.RetryInterval = TimeSpan.FromMilliseconds(0);
 
         // 結果の保持用
-        var list = fetcher.OnNicoliveCommentReceived.Materialize().ToLiveList();
+        var list = fetcher.OnMessageReceived.Materialize().ToLiveList();
 
         // 取得開始
         fetcher.Connect("");
@@ -87,7 +191,6 @@ public sealed class NdgrLiveCommentFetcherSpec
         var count = 0;
 
 
-        // 呼び出されたら成功
         apiClientMock
             .Setup(x =>
                 x.FetchViewAtNowAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
@@ -107,12 +210,12 @@ public sealed class NdgrLiveCommentFetcherSpec
         var fetcher = new NdgrLiveCommentFetcher(apiClientMock.Object);
 
         // 結果の保持用
-        var list = fetcher.OnNicoliveCommentReceived.Materialize().ToLiveList();
+        var list = fetcher.OnMessageReceived.Materialize().ToLiveList();
         var statusList = fetcher.ConnectionStatus.ToLiveList();
 
         // 取得開始
         fetcher.Connect("test");
-        
+
         Assert.Multiple(() =>
         {
             // OnErrorResumeが1回発火しているはず
@@ -143,9 +246,28 @@ public sealed class NdgrLiveCommentFetcherSpec
                     // 再接続
                     ConnectionState.Disconnected,
                     ConnectionState.Connecting,
-                    ConnectionState.Connected
+                    ConnectionState.Connected,
+                    ConnectionState.Disconnected
                 }, statusList
             );
         });
+    }
+
+    private async IAsyncEnumerable<ChunkedMessage> CreateChunkedMessagesAsync(TimeSpan delayTime, params string[] texts)
+    {
+        foreach (var text in texts)
+        {
+            await Task.Delay(delayTime);
+            yield return new ChunkedMessage()
+            {
+                Message = new NicoliveMessage()
+                {
+                    Chat = new Chat()
+                    {
+                        Content = text
+                    }
+                }
+            };
+        }
     }
 }
