@@ -278,11 +278,11 @@ namespace NdgrClientSharp
                     if (!hasNext)
                     {
                         // Nextがない場合はSegmentの全受信を待ってから終了
-                        
+                        // だが実際はNextは無限に存在し続けるぽいからここが実行されることはないはず
                         while (_fetchingSegmentCount > 0)
                         {
-                            ct.ThrowIfCancellationRequested();
-                            await Task.Yield();
+                            // 適当に終わりそうな時間だけ待つ
+                            await Task.Delay(TimeSpan.FromSeconds(3), ct);
                         }
 
                         Disconnect();
