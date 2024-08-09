@@ -115,6 +115,44 @@ ndgrApiClient.Dispose();
 httpClient.Dispose();
 ```
 
+#### 補足: 例外
+
+次の例外が定義されており、`NdgrApiClient`の動作に応じて例外が発行されます。
+
+```cs
+// 基底クラス
+public abstract class NdgrApiClientException : Exception
+{
+    protected NdgrApiClientException(string message) : base(message)
+    {
+    }
+}
+
+// バイトの読み出し、ProtocolBuffer周りで例外が発生した場合に発行
+public sealed class NdgrApiClientByteReadException : NdgrApiClientException
+{
+    public NdgrApiClientByteReadException(string message) : base(message)
+    {
+    }
+}
+
+// 通信に失敗した場合に発行
+public sealed class NdgrApiClientHttpException : Exception
+{
+    public HttpStatusCode HttpStatusCode { get; }
+
+    public NdgrApiClientHttpException(HttpStatusCode httpStatusCode)
+    {
+        HttpStatusCode = httpStatusCode;
+    }
+
+    public override string ToString()
+    {
+        return $"{base.ToString()}, {nameof(HttpStatusCode)}: {HttpStatusCode}";
+    }
+}
+```
+
 ### NdgrLiveCommentFetcher
 
 ニコニコ生放送の放送中のコメントをリアルタイムに取得するクライアントです。
