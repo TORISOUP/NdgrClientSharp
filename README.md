@@ -51,10 +51,6 @@ Releaseよりzipでダウンロードして、次のdllをプロジェクトに�
 
 加えてUnityで動作させる場合は[R3.Unity](https://github.com/Cysharp/R3?tab=readme-ov-file#unity)も導入してください。
 
-## ViewAPI URIの取得
-
-NDGRの通信の起点はView APIのURIです。こちらは`https://live2.nicovideo.jp/watch/{lv}/programinfo`などから取得することができます。
-
 
 ## 使い方
 
@@ -317,7 +313,7 @@ ndgrLiveCommentFetcher
 
 
 なお、すでに終了済みの番組に対して`Connect()`をした場合、`OnProgramEnded`は発行されません。
-番組状態を別のAPI(`programInfo`など)で取得し、放送中であることを確認してから`Connect()`してください。
+番組状態を別のAPIで取得し、放送中であることを確認してから`Connect()`してください。
 
 ### NdgrPastCommentFetcher
 
