@@ -16,9 +16,6 @@
     <ItemGroup>
         <PackageReference Include="R3" Version="1.2.*"/>
     </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0"/>
-    </ItemGroup>
+    
 
 </Project>
