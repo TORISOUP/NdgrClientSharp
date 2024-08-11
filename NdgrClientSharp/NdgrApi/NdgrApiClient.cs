@@ -57,8 +57,8 @@ namespace NdgrClientSharp.NdgrApi
             var uri = TrimQuery(viewApiUri);
 
             var response = await _httpClient.GetAsync(
-                    $"{uri}?at=now",
-                    HttpCompletionOption.ResponseHeadersRead, ct);
+                $"{uri}?at=now",
+                HttpCompletionOption.ResponseHeadersRead, ct);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -91,8 +91,8 @@ namespace NdgrClientSharp.NdgrApi
             var uri = TrimQuery(viewApiUri);
             var response =
                 await _httpClient.GetAsync(
-                        $"{uri}?at={unixTime}",
-                        HttpCompletionOption.ResponseHeadersRead, ct);
+                    $"{uri}?at={unixTime}",
+                    HttpCompletionOption.ResponseHeadersRead, ct);
             ;
 
             if (!response.IsSuccessStatusCode)
@@ -121,7 +121,11 @@ namespace NdgrClientSharp.NdgrApi
         {
             var ct = CreateLinkedToken(token);
 
+#if NETSTANDARD2_1
             await using var response = await _httpClient.GetStreamAsync(apiUri);
+#else
+            using var response = await _httpClient.GetStreamAsync(apiUri);
+#endif
             await foreach (var chunk in ReadProtoBuffBytesAsync(response, ct))
             {
                 var message = ChunkedMessage.Parser.ParseFrom(chunk);
@@ -142,7 +146,7 @@ namespace NdgrClientSharp.NdgrApi
             var message = PackedSegment.Parser.ParseFrom(await response.Content.ReadAsStreamAsync());
             return message;
         }
-        
+
         #region read bytes utils
 
         /// <summary>
@@ -162,7 +166,13 @@ namespace NdgrClientSharp.NdgrApi
                     yield break;
                 }
 
+#if NETSTANDARD2_1
                 yield return buffer[..read];
+#else
+                var result = new byte[read];
+                Array.Copy(buffer, result, read);
+                yield return result;
+#endif
             }
         }
 

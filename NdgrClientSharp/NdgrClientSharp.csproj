@@ -3,8 +3,8 @@
     <PropertyGroup>
         <Nullable>enable</Nullable>
         <Version>0.1.0</Version>
-        <TargetFrameworks>netstandard2.1;netstandard2.0</TargetFrameworks>
         <LangVersion>8</LangVersion>
+        <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,8 +14,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="HiNetCloud.Microsoft.Bcl.AsyncInterfaces" Version="24.8.10.9" />
-      <PackageReference Include="R3" Version="1.2.*" />
+        <PackageReference Include="R3" Version="1.2.*"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0"/>
     </ItemGroup>
 
 </Project>
