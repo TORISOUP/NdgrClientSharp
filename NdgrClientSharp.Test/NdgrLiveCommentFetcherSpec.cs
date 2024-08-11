@@ -78,7 +78,7 @@ public sealed class NdgrLiveCommentFetcherSpec
                 }
             }.ToAsyncEnumerable());
 
-        var fetcher = new NdgrLiveCommentFetcher(apiClientMock.Object);
+        var fetcher = new NdgrLiveCommentFetcher(apiClientMock.Object, null);
 
         // 結果の保持用
         var list = fetcher.OnMessageReceived.Select(x => x.Message.Chat.Content).ToLiveList();
@@ -86,7 +86,7 @@ public sealed class NdgrLiveCommentFetcherSpec
 
         // 取得開始
         fetcher.Connect("test");
-        
+
         // Disconnectされるまで待つ
         await fetcher.ConnectionStatus
             .Where(x => x == ConnectionState.Disconnected)
@@ -112,8 +112,8 @@ public sealed class NdgrLiveCommentFetcherSpec
     }
 
 
-    [Test, Timeout(1000)]
-    public async Task 最初の取得時にServiceUnavailableのときは上限までリトライする()
+    [Test]
+    public void 最初の取得時にServiceUnavailableのときは上限までリトライする()
     {
         var apiClientMock = new Mock<INdgrApiClient>();
 
@@ -148,8 +148,8 @@ public sealed class NdgrLiveCommentFetcherSpec
     }
 
 
-    [Test, Timeout(1000)]
-    public async Task 最初の取得時にその他のエラー時はリトライせずに諦める()
+    [Test]
+    public void 最初の取得時にその他のエラー時はリトライせずに諦める()
     {
         var apiClientMock = new Mock<INdgrApiClient>();
 
@@ -182,7 +182,7 @@ public sealed class NdgrLiveCommentFetcherSpec
     }
 
     [Test]
-    public async Task Viewを連続して取得中にServiceUnavailableが出た場合はRecconectする()
+    public void Viewを連続して取得中にServiceUnavailableが出た場合はRecconectする()
     {
         var apiClientMock = new Mock<INdgrApiClient>();
 
