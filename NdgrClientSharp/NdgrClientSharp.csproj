@@ -5,6 +5,7 @@
         <Version>0.1.0</Version>
         <LangVersion>8</LangVersion>
         <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+        <AssemblyVersion>0.1.0</AssemblyVersion>
     </PropertyGroup>
 
     <ItemGroup>
