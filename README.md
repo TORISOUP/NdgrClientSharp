@@ -56,6 +56,9 @@ Releaseよりzipでダウンロードして、次のdllをプロジェクトに�
 
 ### NdgrApiClient
 
+**「NdgrApiClient」は上級者向けのクライアントです。**  
+より簡単にコメント受信だけがしたい場合は**NdgrLiveCommentFetcher**か**NdgrPastCommentFetcher**を使って下さい。
+
 NDGRと通信するためのAPIクライアントです。NDGRのAPIとの通信をほぼラップせずに提供します。
 結果はすべてProtoBuffから自動生成されたデータ構造をそのまま返します。
 
