@@ -47,7 +47,6 @@ namespace NdgrClientSharp
         private readonly INdgrApiClient _ndgrApiClient;
         private readonly object _gate = new object();
         private readonly Subject<ChunkedMessage> _messageSubject = new Subject<ChunkedMessage>();
-        private readonly TimeProvider _timeProvider;
         private readonly bool _needDisposeNdgrApiClient;
 
         private readonly SynchronizedReactiveProperty<ConnectionState>
@@ -56,18 +55,12 @@ namespace NdgrClientSharp
         private CancellationTokenSource? _mainCts;
         private bool _isDisposed;
 
-        // サーバ時刻とローカル時刻の差分
-        private int _offsetSeconds = 0;
+
         private string _latestViewApiUri = string.Empty;
         private uint _fetchingSegmentCount = 0;
 
-        /// <summary>
-        /// ローカルPCの時刻のズレを補正し、サーバ側に合わせた時刻
-        /// </summary>
-        private DateTimeOffset OffsetCurrentTime =>
-            _timeProvider.GetUtcNow().AddSeconds(_offsetSeconds);
 
-        public NdgrLiveCommentFetcher(INdgrApiClient? ndgrApiClient = null, TimeProvider? timeProvider = null)
+        public NdgrLiveCommentFetcher(INdgrApiClient? ndgrApiClient = null)
         {
             if (ndgrApiClient == null)
             {
@@ -79,8 +72,6 @@ namespace NdgrClientSharp
                 _ndgrApiClient = ndgrApiClient;
                 _needDisposeNdgrApiClient = false;
             }
-
-            _timeProvider = timeProvider ?? TimeProvider.System;
 
             OnProgramEnded = _messageSubject
                 .Where(x => x.State?.ProgramStatus?.State is ProgramStatus.Types.State.Ended)
@@ -193,9 +184,6 @@ namespace NdgrClientSharp
                         _connectionStatus.Value = ConnectionState.Connected;
                     }
 
-                    // サーバ時刻とローカル時刻の差分を保存して補正できるようにしておく
-                    _offsetSeconds = (int)(next.At - _timeProvider.GetUtcNow().ToUnixTimeSeconds());
-                    
                     // コメント取得のためのSegmentおよびNextの取得処理
                     Forget(FetchLoopAsync(viewApiUri, next.At, ct));
                     return;
@@ -348,24 +336,7 @@ namespace NdgrClientSharp
             {
                 _fetchingSegmentCount++;
 
-                // この時刻以降のコメント情報が取得できる
-                // ただし滑らかなコメント受信のためにはFromの1秒くらい前にprefetchしておく必要がある
-                var from = segment.From.ToDateTimeOffset();
-
-                // fromの1秒前
-                var waitTargetTime　= from.AddSeconds(-1);
-
-                // 補正済みの現在時刻
-                var now =　OffsetCurrentTime;
-
-                // fromの1秒前まで待機
-                if (waitTargetTime > now)
-                {
-                    await Task.Delay(waitTargetTime - now, ct);
-                }
-
                 var uri = segment.Uri;
-
                 await foreach (var chunkedMessage in _ndgrApiClient.FetchChunkedMessagesAsync(uri, ct))
                 {
                     lock (_gate)
