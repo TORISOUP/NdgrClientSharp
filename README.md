@@ -16,7 +16,7 @@
 
 ## 動作環境
 
-`.NET Standard 2.0`以上向けです。
+`C# 8.0`以上 & `.NET Standard 2.0`以上向けです。
 
 また、動作には次のライブラリが必要です。
 
@@ -53,101 +53,6 @@ Releaseよりzipでダウンロードして、次のdllをプロジェクトに�
 
 
 ## 使い方
-
-### NdgrApiClient
-
-NDGRと通信するためのAPIクライアントです。NDGRのAPIとの通信をほぼラップせずに提供します。
-結果はすべてProtoBuffから自動生成されたデータ構造をそのまま返します。
-
-また`NdgrLiveCommentFetcher`/`NdgrPastCommentFetcher`/`NdgrSnapshotFetcher`が内部的に依存するクライアントでもあります。
-
-自身でNDGRとの通信を細かく制御したい場合に使用してください。
-
-```cs
-// 初期化
-using (var ndgrApiClient = new NdgrApiClient())
-{
-    // /api/view/v4/:view?at=now の取得
-    var next = await ndgrApiClient.FetchViewAtNowAsync(viewApiUri);
-
-    // /api/view/v4/:view?at=unixtime の取得
-    await foreach (var chunkedEntry in ndgrApiClient.FetchViewAtAsync(viewApiUri, next.At))
-    {
-        switch (chunkedEntry.EntryCase)
-        {
-            case ChunkedEntry.EntryOneofCase.None:
-                break;
-            case ChunkedEntry.EntryOneofCase.Backward:
-                break;
-            case ChunkedEntry.EntryOneofCase.Previous:
-                break;
-            case ChunkedEntry.EntryOneofCase.Segment:
-                break;
-            case ChunkedEntry.EntryOneofCase.Next:
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-    }
-}
-```
-
-また通信の挙動をより細かく制御したい場合はコンストラクタに`HttpClient`を渡すことができます。
-ただし**コンストラクタでHttpClientを指定した場合、このHttpClientのDisposeは自身で管理してください**
-
-```cs
-// HttpClientの作成
-var httpClient = new HttpClient(new HttpClientHandler());
-
-// UAを設定したり
-httpClient.DefaultRequestHeaders.Add("User-Agent", "my-user-agent");
-
-// ndgrApiClientの作成
-var ndgrApiClient = new NdgrApiClient(httpClient);
-
-// NdgrApiClientをDisposeしただけではHttpClientはDisposeされない
-// 自身でHttpClientのDisposeを行う必要あり
-ndgrApiClient.Dispose();
-httpClient.Dispose();
-```
-
-#### 補足: 例外
-
-次の例外が定義されており、`NdgrApiClient`の動作に応じて例外が発行されます。
-
-```cs
-// 基底クラス
-public abstract class NdgrApiClientException : Exception
-{
-    protected NdgrApiClientException(string message) : base(message)
-    {
-    }
-}
-
-// バイトの読み出し、ProtocolBuffer周りで例外が発生した場合に発行
-public sealed class NdgrApiClientByteReadException : NdgrApiClientException
-{
-    public NdgrApiClientByteReadException(string message) : base(message)
-    {
-    }
-}
-
-// 通信に失敗した場合に発行
-public sealed class NdgrApiClientHttpException : Exception
-{
-    public HttpStatusCode HttpStatusCode { get; }
-
-    public NdgrApiClientHttpException(HttpStatusCode httpStatusCode)
-    {
-        HttpStatusCode = httpStatusCode;
-    }
-
-    public override string ToString()
-    {
-        return $"{base.ToString()}, {nameof(HttpStatusCode)}: {HttpStatusCode}";
-    }
-}
-```
 
 ### NdgrLiveCommentFetcher
 
@@ -227,6 +132,9 @@ liveCommentFetcher
 
 
 #### 補足2:NdgrApiClientの指定
+
+`NdgrApiClient` を生成してコンストラクタで指定することができます。
+`HttpClient`の挙動をカスタマイズしたい場合は、カスタマイズした`HttpClient`で`NdgrApiClient`を初期化し、それを`NdgrLiveCommentFetcher`に渡してください。
 
 ```cs
 var httpClient = new HttpClient();
@@ -374,6 +282,106 @@ await foreach (var chunkedMessage in ndgrSnapshotFetcher.FetchCurrentSnapshotAsy
     Console.WriteLine(chunkedMessage);
 }
 ```
+
+
+### NdgrApiClient
+
+**「NdgrApiClient」は上級者向けのクライアントです。**  
+より簡単にコメント受信だけがしたい場合は**NdgrLiveCommentFetcher**か**NdgrPastCommentFetcher**を使って下さい。
+
+NDGRと通信するためのAPIクライアントです。NDGRのAPIとの通信をほぼラップせずに提供します。
+結果はすべてProtoBuffから自動生成されたデータ構造をそのまま返します。
+
+また`NdgrLiveCommentFetcher`/`NdgrPastCommentFetcher`/`NdgrSnapshotFetcher`が内部的に依存するクライアントでもあります。
+
+自身でNDGRとの通信を細かく制御したい場合に使用してください。
+
+```cs
+// 初期化
+using (var ndgrApiClient = new NdgrApiClient())
+{
+    // /api/view/v4/:view?at=now の取得
+    var next = await ndgrApiClient.FetchViewAtNowAsync(viewApiUri);
+
+    // /api/view/v4/:view?at=unixtime の取得
+    await foreach (var chunkedEntry in ndgrApiClient.FetchViewAtAsync(viewApiUri, next.At))
+    {
+        switch (chunkedEntry.EntryCase)
+        {
+            case ChunkedEntry.EntryOneofCase.None:
+                break;
+            case ChunkedEntry.EntryOneofCase.Backward:
+                break;
+            case ChunkedEntry.EntryOneofCase.Previous:
+                break;
+            case ChunkedEntry.EntryOneofCase.Segment:
+                break;
+            case ChunkedEntry.EntryOneofCase.Next:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+}
+```
+
+また通信の挙動をより細かく制御したい場合はコンストラクタに`HttpClient`を渡すことができます。
+ただし**コンストラクタでHttpClientを指定した場合、このHttpClientのDisposeは自身で管理してください**
+
+```cs
+// HttpClientの作成
+var httpClient = new HttpClient(new HttpClientHandler());
+
+// UAを設定したり
+httpClient.DefaultRequestHeaders.Add("User-Agent", "my-user-agent");
+
+// ndgrApiClientの作成
+var ndgrApiClient = new NdgrApiClient(httpClient);
+
+// NdgrApiClientをDisposeしただけではHttpClientはDisposeされない
+// 自身でHttpClientのDisposeを行う必要あり
+ndgrApiClient.Dispose();
+httpClient.Dispose();
+```
+
+#### 補足: 例外
+
+次の例外が定義されており、`NdgrApiClient`の動作に応じて例外が発行されます。
+
+```cs
+// 基底クラス
+public abstract class NdgrApiClientException : Exception
+{
+    protected NdgrApiClientException(string message) : base(message)
+    {
+    }
+}
+
+// バイトの読み出し、ProtocolBuffer周りで例外が発生した場合に発行
+public sealed class NdgrApiClientByteReadException : NdgrApiClientException
+{
+    public NdgrApiClientByteReadException(string message) : base(message)
+    {
+    }
+}
+
+// 通信に失敗した場合に発行
+public sealed class NdgrApiClientHttpException : Exception
+{
+    public HttpStatusCode HttpStatusCode { get; }
+
+    public NdgrApiClientHttpException(HttpStatusCode httpStatusCode)
+    {
+        HttpStatusCode = httpStatusCode;
+    }
+
+    public override string ToString()
+    {
+        return $"{base.ToString()}, {nameof(HttpStatusCode)}: {HttpStatusCode}";
+    }
+}
+```
+
 
 # ライセンスについて
 
