@@ -193,6 +193,11 @@ namespace NdgrClientSharp
                     // nothing
                     return;
                 }
+                catch (WebException w) when (w.Status == WebExceptionStatus.RequestCanceled)
+                {
+                    // nothing
+                    return;
+                }
                 catch (NdgrApiClientHttpException ex)
                 {
                     lock (_gate)
@@ -293,6 +298,10 @@ namespace NdgrClientSharp
             {
                 // nothing
             }
+            catch (WebException w) when (w.Status == WebExceptionStatus.RequestCanceled)
+            {
+                // nothing
+            }
             catch (NdgrApiClientHttpException e)
             {
                 lock (_gate)
@@ -349,6 +358,10 @@ namespace NdgrClientSharp
             {
                 // nothing
             }
+            catch (WebException w) when (w.Status == WebExceptionStatus.RequestCanceled)
+            {
+                // nothing
+            }
             catch (Exception e)
             {
                 lock (_gate)
@@ -376,6 +389,10 @@ namespace NdgrClientSharp
             catch (OperationCanceledException)
             {
                 // ignore
+            }
+            catch (WebException w) when (w.Status == WebExceptionStatus.RequestCanceled)
+            {
+                // nothing
             }
             catch (Exception e)
             {
