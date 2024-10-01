@@ -78,7 +78,7 @@ public sealed class NdgrLiveCommentFetcherSpec
                 }
             }.ToAsyncEnumerable());
 
-        var fetcher = new NdgrLiveCommentFetcher(apiClientMock.Object, null);
+        var fetcher = new NdgrLiveCommentFetcher(apiClientMock.Object);
 
         // 結果の保持用
         var list = fetcher.OnMessageReceived.Select(x => x.Message.Chat.Content).ToLiveList();

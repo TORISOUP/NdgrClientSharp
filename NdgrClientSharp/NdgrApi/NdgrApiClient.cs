@@ -93,7 +93,6 @@ namespace NdgrClientSharp.NdgrApi
                 await _httpClient.GetAsync(
                     $"{uri}?at={unixTime}",
                     HttpCompletionOption.ResponseHeadersRead, ct);
-            ;
 
             if (!response.IsSuccessStatusCode)
             {
@@ -128,7 +127,19 @@ namespace NdgrClientSharp.NdgrApi
 #endif
             await foreach (var chunk in ReadProtoBuffBytesAsync(response, ct))
             {
-                var message = ChunkedMessage.Parser.ParseFrom(chunk);
+                ct.ThrowIfCancellationRequested();
+                
+                ChunkedMessage message;
+                try
+                {
+                    message = ChunkedMessage.Parser.ParseFrom(chunk);
+                }
+                catch
+                {
+                    // ignore...
+                    continue;
+                }
+
                 yield return message;
             }
         }
@@ -186,6 +197,8 @@ namespace NdgrClientSharp.NdgrApi
             using var reader = new ProtobufStreamReader();
             await foreach (var chunk in ReadRawBytesAsync(stream).WithCancellation(ct))
             {
+                ct.ThrowIfCancellationRequested();
+
                 reader.AddNewChunk(chunk);
                 while (true)
                 {
