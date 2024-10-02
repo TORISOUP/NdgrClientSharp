@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,6 +46,20 @@ namespace NdgrClientSharp
         /// </summary>
         public TimeSpan RetryInterval { get; set; } = TimeSpan.FromSeconds(2);
 
+        /// <summary>
+        /// 現在受信中のSegment一覧
+        /// </summary>
+        public IEnumerable<string> CurrentReceivingSegments
+        {
+            get
+            {
+                lock (_receivedMessages)
+                {
+                    return _receivedMessages.Keys.ToArray();
+                }
+            }
+        }
+
         private readonly INdgrApiClient _ndgrApiClient;
         private readonly object _gate = new object();
         private readonly Subject<ChunkedMessage> _messageSubject = new Subject<ChunkedMessage>();
@@ -54,11 +70,11 @@ namespace NdgrClientSharp
 
         private CancellationTokenSource? _mainCts;
         private bool _isDisposed;
-
-
         private string _latestViewApiUri = string.Empty;
         private uint _fetchingSegmentCount = 0;
 
+        private readonly Dictionary<string, HashSet<string>> _receivedMessages =
+            new Dictionary<string, HashSet<string>>();
 
         public NdgrLiveCommentFetcher(INdgrApiClient? ndgrApiClient = null)
         {
@@ -152,6 +168,7 @@ namespace NdgrClientSharp
             {
                 if (_isDisposed) return;
                 _isDisposed = true;
+                _receivedMessages.Clear();
 
                 Disconnect();
 
@@ -249,6 +266,8 @@ namespace NdgrClientSharp
                 {
                     var hasNext = false;
                     var chunks = _ndgrApiClient.FetchViewAtAsync(viewApiUri, targetTime, ct);
+                    var receivedSegments = new HashSet<string>();
+
                     // SegmentおよびNextの監視
                     await foreach (var chunk in chunks)
                     {
@@ -257,6 +276,7 @@ namespace NdgrClientSharp
                             case ChunkedEntry.EntryOneofCase.Segment:
                                 // Segment（コメント本文を返すAPI情報）
                                 var segment = chunk.Segment;
+                                receivedSegments.Add(segment.Uri);
                                 Forget(FetchSegmentAsync(segment, ct));
 
                                 break;
@@ -279,6 +299,19 @@ namespace NdgrClientSharp
                     }
 
                     ct.ThrowIfCancellationRequested();
+
+                    // ReceivedSegmentsに含まれないものはDictionaryから削除
+                    lock (_receivedMessages)
+                    {
+                        foreach (var key in _receivedMessages.Keys.ToArray())
+                        {
+                            if (!receivedSegments.Contains(key))
+                            {
+                                _receivedMessages[key]?.Clear();
+                                _receivedMessages.Remove(key);
+                            }
+                        }
+                    }
 
                     if (!hasNext)
                     {
@@ -345,22 +378,48 @@ namespace NdgrClientSharp
             {
                 _fetchingSegmentCount++;
 
+                HashSet<string> hashSet;
+
+                lock (_receivedMessages)
+                {
+                    if (!_receivedMessages.TryGetValue(segment.Uri, out var set))
+                    {
+                        hashSet = new HashSet<string>();
+                        _receivedMessages.Add(segment.Uri, hashSet);
+                    }
+                    else
+                    {
+                        hashSet = set;
+                    }
+                }
+
                 var uri = segment.Uri;
                 await foreach (var chunkedMessage in _ndgrApiClient.FetchChunkedMessagesAsync(uri, ct))
                 {
                     lock (_gate)
                     {
-                        _messageSubject.OnNext(chunkedMessage);
+                        var meta = chunkedMessage.Meta;
+                        if (meta != null)
+                        {
+                            // Metaが存在する場合は重複チェック
+                            if (hashSet.Add(chunkedMessage.Meta.Id))
+                            {
+                                _messageSubject.OnNext(chunkedMessage);
+                            }
+                        }
+                        else
+                        {
+                            // Metaが存在しない場合は素通し
+                            _messageSubject.OnNext(chunkedMessage);
+                        }
                     }
                 }
             }
             catch (OperationCanceledException)
             {
-                // nothing
             }
             catch (WebException w) when (w.Status == WebExceptionStatus.RequestCanceled)
             {
-                // nothing
             }
             catch (Exception e)
             {
@@ -371,7 +430,6 @@ namespace NdgrClientSharp
                         _messageSubject.OnErrorResume(e);
                     }
                 }
-                // Segmentは取得失敗しても継続する
             }
             finally
             {
