@@ -17,7 +17,7 @@ namespace NdgrClientSharp.Utilities
             _bufferStream.Write(chunk, 0, chunk.Length);
         }
 
-        private (int offset, uint result)? ReadVariant()
+        private (int offset, uint result)? ReadVarint()
         {
             var offset = 0;
             uint result = 0;
@@ -51,7 +51,7 @@ namespace NdgrClientSharp.Utilities
 
         public byte[]? UnshiftChunk()
         {
-            var readVarint = ReadVariant();
+            var readVarint = ReadVarint();
             if (readVarint == null) return null;
 
             var (offset, varint) = readVarint.Value;
