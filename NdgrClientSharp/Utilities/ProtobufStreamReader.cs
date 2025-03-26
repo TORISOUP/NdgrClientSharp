@@ -3,8 +3,11 @@ using System.IO;
 
 namespace NdgrClientSharp.Utilities
 {
-    // このコードを参考にC#用に実装したもの
-    // https://github.com/rinsuki-lab/ndgr-reader/blob/main/src/protobuf-stream-reader.ts
+
+    /// <summary>
+    /// Protocol BufferのBase 128 Varintsを読み取り、メッセージを取り出す
+    /// https://protobuf.dev/programming-guides/encoding/
+    /// </summary>
     internal sealed class ProtobufStreamReader : IDisposable
     {
         private readonly MemoryStream _bufferStream = new MemoryStream();
@@ -14,56 +17,70 @@ namespace NdgrClientSharp.Utilities
             _bufferStream.Write(chunk, 0, chunk.Length);
         }
 
-        private (int offset, int result)? ReadVariant()
+        private (int offset, uint result)? ReadVariant()
         {
             var offset = 0;
-            var result = 0;
+            uint result = 0;
             var shift = 0;
 
             _bufferStream.Position = 0;
 
-            while (offset < 5)
+            while (true)
             {
                 var b = _bufferStream.ReadByte();
-                if (b == -1) return null;
-                result |= (b & 0x7F) << shift;
+                if (b == -1) return null; // まだデータが揃ってない
+
                 offset++;
+                result |= (uint)(b & 0x7F) << shift;
                 shift += 7;
+
+                if (offset > 5)
+                {
+                    // int32を超える大きさのメッセージは来ないはずなのでなにかがおかしい
+                    // バッファをクリアして処理を中断
+                    _bufferStream.SetLength(0);
+                    return null;
+                }
 
                 if ((b & 0x80) == 0)
                 {
                     return (offset, result);
                 }
             }
-
-            // 読み取り失敗, 例外を通知したところでハンドリングのしようがないので握りつぶしてnullを返す
-            return null;
         }
 
         public byte[]? UnshiftChunk()
         {
-            var readVariant = ReadVariant();
-            if (readVariant == null) return null;
+            var readVarint = ReadVariant();
+            if (readVarint == null) return null;
 
-            var (offset, variant) = readVariant.Value;
+            var (offset, varint) = readVarint.Value;
 
-            if (offset + variant > _bufferStream.Length)
+            if (offset + varint > _bufferStream.Length)
             {
+                // varintの値がバッファのサイズを超える場合はまだデータが揃っていない
                 return null;
             }
 
-            var message = new byte[variant];
+            if (varint > int.MaxValue)
+            {
+                // int.MaxValueを超えるサイズのメッセージはこないはず
+                // なにかがおかしいのでバッファをクリアして処理を中断
+                _bufferStream.SetLength(0);
+                return null;
+            }
 
-            // Read the message bytes directly into the array
+            
+            // TODO: メモリ効率の最適化
+            var message = new byte[varint];
+
             _bufferStream.Position = offset;
-            _bufferStream.Read(message, 0, variant);
+            _bufferStream.Read(message, 0, (int)varint);
 
-            // Shift the buffer content
-            var remainingBuffer = new byte[_bufferStream.Length - offset - variant];
-            _bufferStream.Position = offset + variant;
+            var remainingBuffer = new byte[_bufferStream.Length - offset - varint];
+            _bufferStream.Position = offset + varint;
             _bufferStream.Read(remainingBuffer, 0, remainingBuffer.Length);
 
-            // Reset and refill the stream with the remaining data
             _bufferStream.SetLength(0);
             _bufferStream.Write(remainingBuffer, 0, remainingBuffer.Length);
 
