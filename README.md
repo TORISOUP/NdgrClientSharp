@@ -51,6 +51,17 @@ Releaseよりzipでダウンロードして、次のdllをプロジェクトに�
 
 加えてUnityで動作させる場合は[R3.Unity](https://github.com/Cysharp/R3?tab=readme-ov-file#unity)も導入してください。
 
+### Unityで使用する場合
+
+Unityで使用する場合はHttpHandlerを[YetAnotherHttpHandler](https://github.com/Cysharp/YetAnotherHttpHandler)に差し替えて使用してください。
+
+```cs
+var handler = new YetAnotherHttpHandler(); // here
+var httpClient = new HttpClient(handler);
+
+var ndgrApiClient = new NdgrApiClient(httpClient);
+var ndgrLiveCommentFetcher = new NdgrLiveCommentFetcher(ndgrApiClient);
+```
 
 ## 使い方
 
