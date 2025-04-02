@@ -236,7 +236,7 @@ ndgrLiveCommentFetcher
 
 ### NdgrPastCommentFetcher
 
-放送中番組の過去のコメント(`ChunckedMessage`)を取得するクライントです。
+放送中番組の過去のコメント(`ChunckedMessage`)やタイムシフトからコメントを取得するクライントです。
 現在時刻から遡って指定件数くらいのコメントを`Observable<ChunckedMessage>`として取得できます。
 
 
