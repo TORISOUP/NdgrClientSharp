@@ -130,4 +130,54 @@ public class NdgrProtobufStreamReaderSpec
         var resultBuffer = new byte[100]; // 100バイトしか収容できない
         Assert.Throws<NdgrProtobufStreamReaderException>(() => reader.UnshiftChunk(resultBuffer));
     }
+
+    [Test]
+    public void UnshiftChunk_データが足りない場合は追加することで読み取りができる()
+    {
+        var reader = new NdgrProtobufStreamReader();
+        var resultBuffer = new byte[2048];
+
+        // varintを2byte用意
+        var varints = EncodeVarint(1024);
+
+        var payload = new byte[1024];
+        for (int i = 0; i < payload.Length; i++)
+        {
+            payload[i] = (byte)i;
+        }
+        
+        // varintを一部書き込み
+        reader.AddNewChunk(varints.Take(1).ToArray());
+        var result = reader.UnshiftChunk(resultBuffer);
+        
+        // まだ足りない
+        Assert.IsFalse(result.isValid);
+        
+        // 残りを書き込み
+        reader.AddNewChunk(varints.Skip(1).ToArray());
+        result = reader.UnshiftChunk(resultBuffer);
+        
+        // varintは揃ったが、payloadはまだ足りない
+        Assert.IsFalse(result.isValid);
+        
+        // ------
+        
+        // payloadを部分的に書き込む
+        reader.AddNewChunk(payload.Take(512).ToArray());
+        
+        // まだ足りない
+        result = reader.UnshiftChunk(resultBuffer);
+        Assert.IsFalse(result.isValid);
+        
+        // ----
+        
+        // payloadを残りを書き込む
+        reader.AddNewChunk(payload.Skip(512).ToArray());
+        result = reader.UnshiftChunk(resultBuffer);
+        
+        // すべて揃った
+        Assert.IsTrue(result.isValid);
+        Assert.That(result.messageSize, Is.EqualTo(payload.Length));
+        Assert.That(resultBuffer[..result.messageSize], Is.EqualTo(payload));
+    }
 }

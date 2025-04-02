@@ -10,6 +10,8 @@ namespace NdgrClientSharp.Utilities
 
         public void AddNewChunk(byte[] chunk, int? length = null)
         {
+            // 末尾に書き込む
+            _bufferStream.Position = _bufferStream.Length;
             _bufferStream.Write(chunk, 0, length ?? chunk.Length);
         }
 
