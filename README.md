@@ -32,7 +32,7 @@
 
 ## ProtocolBufferの定義について
 
-本ライブラリが使用するProtoBuffの定義は[N Airが定義するprotoファイル(v2024.801.103927)](https://github.com/n-air-app/nicolive-comment-protobuf/releases/tag/v2024.801.103927)を元にしています。
+本ライブラリが使用するProtoBuffの定義は[N Airが定義するprotoファイル(v2025.602.163750)](https://github.com/n-air-app/nicolive-comment-protobuf/releases/tag/v2025.602.163750)を元にしています。
 
 
 # 使用方法
