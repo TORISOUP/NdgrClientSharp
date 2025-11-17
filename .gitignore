@@ -129,3 +129,6 @@ $RECYCLE.BIN/
 .DS_Store
 
 _NCrunch*
+
+/tool/
+AGENTS.md
