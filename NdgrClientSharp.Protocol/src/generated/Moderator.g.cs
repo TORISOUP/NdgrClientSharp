@@ -34,30 +34,33 @@ namespace Dwango.Nicolive.Chat.Data.Atoms {
             "TW9kZXJhdG9yT3BlcmF0aW9uEkQKCG9wZXJhdG9yGAIgASgLMjIuZHdhbmdv",
             "Lm5pY29saXZlLmNoYXQuZGF0YS5hdG9tcy5Nb2RlcmF0b3JVc2VySW5mbxIt",
             "Cgl1cGRhdGVkQXQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1w",
-            "IikKEk1vZGVyYXRvck9wZXJhdGlvbhIHCgNBREQQABIKCgZERUxFVEUQASK7",
-            "AwoLU1NOR1VwZGF0ZWQSTQoJb3BlcmF0aW9uGAEgASgOMjouZHdhbmdvLm5p",
+            "IikKEk1vZGVyYXRvck9wZXJhdGlvbhIHCgNBREQQABIKCgZERUxFVEUQASLF",
+            "BAoLU1NOR1VwZGF0ZWQSTQoJb3BlcmF0aW9uGAEgASgOMjouZHdhbmdvLm5p",
             "Y29saXZlLmNoYXQuZGF0YS5hdG9tcy5TU05HVXBkYXRlZC5TU05HT3BlcmF0",
             "aW9uEg8KB3NzbmdfaWQYAiABKAMSRAoIb3BlcmF0b3IYAyABKAsyMi5kd2Fu",
             "Z28ubmljb2xpdmUuY2hhdC5kYXRhLmF0b21zLk1vZGVyYXRvclVzZXJJbmZv",
             "EkgKBHR5cGUYBCABKA4yNS5kd2FuZ28ubmljb2xpdmUuY2hhdC5kYXRhLmF0",
             "b21zLlNTTkdVcGRhdGVkLlNTTkdUeXBlSACIAQESEwoGc291cmNlGAUgASgJ",
             "SAGIAQESMgoJdXBkYXRlZEF0GAYgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRp",
-            "bWVzdGFtcEgCiAEBIiQKDVNTTkdPcGVyYXRpb24SBwoDQUREEAASCgoGREVM",
-            "RVRFEAEiKwoIU1NOR1R5cGUSCAoEVVNFUhAAEggKBFdPUkQQARILCgdDT01N",
-            "QU5EEAJCBwoFX3R5cGVCCQoHX3NvdXJjZUIMCgpfdXBkYXRlZEF0IqMCChZN",
-            "b2RlcmF0aW9uQW5ub3VuY2VtZW50EhQKB21lc3NhZ2UYASABKAlIAIgBARJd",
-            "Cg5ndWlkZWxpbmVJdGVtcxgCIAMoDjJFLmR3YW5nby5uaWNvbGl2ZS5jaGF0",
-            "LmRhdGEuYXRvbXMuTW9kZXJhdGlvbkFubm91bmNlbWVudC5HdWlkZWxpbmVJ",
-            "dGVtEi0KCXVwZGF0ZWRBdBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1l",
-            "c3RhbXAiWQoNR3VpZGVsaW5lSXRlbRILCgdVTktOT1dOEAASCgoGU0VYVUFM",
-            "EAESCAoEU1BBTRACEgsKB1NMQU5ERVIQAxIYChRQRVJTT05BTF9JTkZPUk1B",
-            "VElPThAEQgoKCF9tZXNzYWdlYgZwcm90bzM="));
+            "bWVzdGFtcEgCiAEBElQKDW9wZXJhdG9yX3R5cGUYByABKA4yPS5kd2FuZ28u",
+            "bmljb2xpdmUuY2hhdC5kYXRhLmF0b21zLlNTTkdVcGRhdGVkLlNTTkdPcGVy",
+            "YXRvclR5cGUiJAoNU1NOR09wZXJhdGlvbhIHCgNBREQQABIKCgZERUxFVEUQ",
+            "ASIrCghTU05HVHlwZRIICgRVU0VSEAASCAoEV09SRBABEgsKB0NPTU1BTkQQ",
+            "AiIyChBTU05HT3BlcmF0b3JUeXBlEg0KCU1PREVSQVRPUhAAEg8KC0JST0FE",
+            "Q0FTVEVSEAFCBwoFX3R5cGVCCQoHX3NvdXJjZUIMCgpfdXBkYXRlZEF0IqMC",
+            "ChZNb2RlcmF0aW9uQW5ub3VuY2VtZW50EhQKB21lc3NhZ2UYASABKAlIAIgB",
+            "ARJdCg5ndWlkZWxpbmVJdGVtcxgCIAMoDjJFLmR3YW5nby5uaWNvbGl2ZS5j",
+            "aGF0LmRhdGEuYXRvbXMuTW9kZXJhdGlvbkFubm91bmNlbWVudC5HdWlkZWxp",
+            "bmVJdGVtEi0KCXVwZGF0ZWRBdBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5U",
+            "aW1lc3RhbXAiWQoNR3VpZGVsaW5lSXRlbRILCgdVTktOT1dOEAASCgoGU0VY",
+            "VUFMEAESCAoEU1BBTRACEgsKB1NMQU5ERVIQAxIYChRQRVJTT05BTF9JTkZP",
+            "Uk1BVElPThAEQgoKCF9tZXNzYWdlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Dwango.Nicolive.Chat.Data.Atoms.ModeratorUserInfo), global::Dwango.Nicolive.Chat.Data.Atoms.ModeratorUserInfo.Parser, new[]{ "UserId", "Nickname", "IconUrl" }, new[]{ "Nickname", "IconUrl" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Dwango.Nicolive.Chat.Data.Atoms.ModeratorUpdated), global::Dwango.Nicolive.Chat.Data.Atoms.ModeratorUpdated.Parser, new[]{ "Operation", "Operator", "UpdatedAt" }, null, new[]{ typeof(global::Dwango.Nicolive.Chat.Data.Atoms.ModeratorUpdated.Types.ModeratorOperation) }, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Dwango.Nicolive.Chat.Data.Atoms.SSNGUpdated), global::Dwango.Nicolive.Chat.Data.Atoms.SSNGUpdated.Parser, new[]{ "Operation", "SsngId", "Operator", "Type", "Source", "UpdatedAt" }, new[]{ "Type", "Source", "UpdatedAt" }, new[]{ typeof(global::Dwango.Nicolive.Chat.Data.Atoms.SSNGUpdated.Types.SSNGOperation), typeof(global::Dwango.Nicolive.Chat.Data.Atoms.SSNGUpdated.Types.SSNGType) }, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Dwango.Nicolive.Chat.Data.Atoms.SSNGUpdated), global::Dwango.Nicolive.Chat.Data.Atoms.SSNGUpdated.Parser, new[]{ "Operation", "SsngId", "Operator", "Type", "Source", "UpdatedAt", "OperatorType" }, new[]{ "Type", "Source", "UpdatedAt" }, new[]{ typeof(global::Dwango.Nicolive.Chat.Data.Atoms.SSNGUpdated.Types.SSNGOperation), typeof(global::Dwango.Nicolive.Chat.Data.Atoms.SSNGUpdated.Types.SSNGType), typeof(global::Dwango.Nicolive.Chat.Data.Atoms.SSNGUpdated.Types.SSNGOperatorType) }, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Dwango.Nicolive.Chat.Data.Atoms.ModerationAnnouncement), global::Dwango.Nicolive.Chat.Data.Atoms.ModerationAnnouncement.Parser, new[]{ "Message", "GuidelineItems", "UpdatedAt" }, new[]{ "Message" }, new[]{ typeof(global::Dwango.Nicolive.Chat.Data.Atoms.ModerationAnnouncement.Types.GuidelineItem) }, null, null)
           }));
     }
@@ -307,11 +310,7 @@ namespace Dwango.Nicolive.Chat.Data.Atoms {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -338,11 +337,7 @@ namespace Dwango.Nicolive.Chat.Data.Atoms {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -585,11 +580,7 @@ namespace Dwango.Nicolive.Chat.Data.Atoms {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -622,11 +613,7 @@ namespace Dwango.Nicolive.Chat.Data.Atoms {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -711,6 +698,7 @@ namespace Dwango.Nicolive.Chat.Data.Atoms {
       type_ = other.type_;
       source_ = other.source_;
       updatedAt_ = other.updatedAt_ != null ? other.updatedAt_.Clone() : null;
+      operatorType_ = other.operatorType_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -821,6 +809,18 @@ namespace Dwango.Nicolive.Chat.Data.Atoms {
       }
     }
 
+    /// <summary>Field number for the "operator_type" field.</summary>
+    public const int OperatorTypeFieldNumber = 7;
+    private global::Dwango.Nicolive.Chat.Data.Atoms.SSNGUpdated.Types.SSNGOperatorType operatorType_ = global::Dwango.Nicolive.Chat.Data.Atoms.SSNGUpdated.Types.SSNGOperatorType.Moderator;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Dwango.Nicolive.Chat.Data.Atoms.SSNGUpdated.Types.SSNGOperatorType OperatorType {
+      get { return operatorType_; }
+      set {
+        operatorType_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -842,6 +842,7 @@ namespace Dwango.Nicolive.Chat.Data.Atoms {
       if (Type != other.Type) return false;
       if (Source != other.Source) return false;
       if (!object.Equals(UpdatedAt, other.UpdatedAt)) return false;
+      if (OperatorType != other.OperatorType) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -855,6 +856,7 @@ namespace Dwango.Nicolive.Chat.Data.Atoms {
       if (HasType) hash ^= Type.GetHashCode();
       if (HasSource) hash ^= Source.GetHashCode();
       if (updatedAt_ != null) hash ^= UpdatedAt.GetHashCode();
+      if (OperatorType != global::Dwango.Nicolive.Chat.Data.Atoms.SSNGUpdated.Types.SSNGOperatorType.Moderator) hash ^= OperatorType.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -897,6 +899,10 @@ namespace Dwango.Nicolive.Chat.Data.Atoms {
         output.WriteRawTag(50);
         output.WriteMessage(UpdatedAt);
       }
+      if (OperatorType != global::Dwango.Nicolive.Chat.Data.Atoms.SSNGUpdated.Types.SSNGOperatorType.Moderator) {
+        output.WriteRawTag(56);
+        output.WriteEnum((int) OperatorType);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -931,6 +937,10 @@ namespace Dwango.Nicolive.Chat.Data.Atoms {
         output.WriteRawTag(50);
         output.WriteMessage(UpdatedAt);
       }
+      if (OperatorType != global::Dwango.Nicolive.Chat.Data.Atoms.SSNGUpdated.Types.SSNGOperatorType.Moderator) {
+        output.WriteRawTag(56);
+        output.WriteEnum((int) OperatorType);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -958,6 +968,9 @@ namespace Dwango.Nicolive.Chat.Data.Atoms {
       }
       if (updatedAt_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(UpdatedAt);
+      }
+      if (OperatorType != global::Dwango.Nicolive.Chat.Data.Atoms.SSNGUpdated.Types.SSNGOperatorType.Moderator) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) OperatorType);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -995,6 +1008,9 @@ namespace Dwango.Nicolive.Chat.Data.Atoms {
         }
         UpdatedAt.MergeFrom(other.UpdatedAt);
       }
+      if (other.OperatorType != global::Dwango.Nicolive.Chat.Data.Atoms.SSNGUpdated.Types.SSNGOperatorType.Moderator) {
+        OperatorType = other.OperatorType;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -1006,11 +1022,7 @@ namespace Dwango.Nicolive.Chat.Data.Atoms {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -1044,6 +1056,10 @@ namespace Dwango.Nicolive.Chat.Data.Atoms {
             input.ReadMessage(UpdatedAt);
             break;
           }
+          case 56: {
+            OperatorType = (global::Dwango.Nicolive.Chat.Data.Atoms.SSNGUpdated.Types.SSNGOperatorType) input.ReadEnum();
+            break;
+          }
         }
       }
     #endif
@@ -1055,11 +1071,7 @@ namespace Dwango.Nicolive.Chat.Data.Atoms {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -1093,6 +1105,10 @@ namespace Dwango.Nicolive.Chat.Data.Atoms {
             input.ReadMessage(UpdatedAt);
             break;
           }
+          case 56: {
+            OperatorType = (global::Dwango.Nicolive.Chat.Data.Atoms.SSNGUpdated.Types.SSNGOperatorType) input.ReadEnum();
+            break;
+          }
         }
       }
     }
@@ -1112,6 +1128,11 @@ namespace Dwango.Nicolive.Chat.Data.Atoms {
         [pbr::OriginalName("USER")] User = 0,
         [pbr::OriginalName("WORD")] Word = 1,
         [pbr::OriginalName("COMMAND")] Command = 2,
+      }
+
+      public enum SSNGOperatorType {
+        [pbr::OriginalName("MODERATOR")] Moderator = 0,
+        [pbr::OriginalName("BROADCASTER")] Broadcaster = 1,
       }
 
     }
@@ -1339,11 +1360,7 @@ namespace Dwango.Nicolive.Chat.Data.Atoms {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -1374,11 +1391,7 @@ namespace Dwango.Nicolive.Chat.Data.Atoms {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;

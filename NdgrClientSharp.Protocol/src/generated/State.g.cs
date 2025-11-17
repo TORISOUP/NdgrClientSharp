@@ -27,7 +27,7 @@ namespace Dwango.Nicolive.Chat.Data {
             "CiVkd2FuZ28vbmljb2xpdmUvY2hhdC9kYXRhL3N0YXRlLnByb3RvEhlkd2Fu",
             "Z28ubmljb2xpdmUuY2hhdC5kYXRhGiVkd2FuZ28vbmljb2xpdmUvY2hhdC9k",
             "YXRhL2F0b21zLnByb3RvGi9kd2FuZ28vbmljb2xpdmUvY2hhdC9kYXRhL2F0",
-            "b21zL21vZGVyYXRvci5wcm90byLaBgoNTmljb2xpdmVTdGF0ZRI+CgpzdGF0",
+            "b21zL21vZGVyYXRvci5wcm90byKGBgoNTmljb2xpdmVTdGF0ZRI+CgpzdGF0",
             "aXN0aWNzGAEgASgLMiUuZHdhbmdvLm5pY29saXZlLmNoYXQuZGF0YS5TdGF0",
             "aXN0aWNzSACIAQESOAoHZW5xdWV0ZRgCIAEoCzIiLmR3YW5nby5uaWNvbGl2",
             "ZS5jaGF0LmRhdGEuRW5xdWV0ZUgBiAEBEj0KCm1vdmVfb3JkZXIYAyABKAsy",
@@ -37,20 +37,18 @@ namespace Dwango.Nicolive.Chat.Data {
             "b2xpdmUuY2hhdC5kYXRhLkNvbW1lbnRMb2NrSASIAQESQQoMY29tbWVudF9t",
             "b2RlGAYgASgLMiYuZHdhbmdvLm5pY29saXZlLmNoYXQuZGF0YS5Db21tZW50",
             "TW9kZUgFiAEBEj8KC3RyaWFsX3BhbmVsGAcgASgLMiUuZHdhbmdvLm5pY29s",
-            "aXZlLmNoYXQuZGF0YS5UcmlhbFBhbmVsSAaIAQESQQoMZmluZ2VyX3ByaW50",
-            "GAggASgLMiYuZHdhbmdvLm5pY29saXZlLmNoYXQuZGF0YS5GaW5nZXJQcmlu",
-            "dEgHiAEBEkUKDnByb2dyYW1fc3RhdHVzGAkgASgLMiguZHdhbmdvLm5pY29s",
-            "aXZlLmNoYXQuZGF0YS5Qcm9ncmFtU3RhdHVzSAiIAQESXQoXbW9kZXJhdGlv",
-            "bl9hbm5vdW5jZW1lbnQYCiABKAsyNy5kd2FuZ28ubmljb2xpdmUuY2hhdC5k",
-            "YXRhLmF0b21zLk1vZGVyYXRpb25Bbm5vdW5jZW1lbnRICYgBAUINCgtfc3Rh",
-            "dGlzdGljc0IKCghfZW5xdWV0ZUINCgtfbW92ZV9vcmRlckIKCghfbWFycXVl",
-            "ZUIPCg1fY29tbWVudF9sb2NrQg8KDV9jb21tZW50X21vZGVCDgoMX3RyaWFs",
-            "X3BhbmVsQg8KDV9maW5nZXJfcHJpbnRCEQoPX3Byb2dyYW1fc3RhdHVzQhoK",
-            "GF9tb2RlcmF0aW9uX2Fubm91bmNlbWVudGIGcHJvdG8z"));
+            "aXZlLmNoYXQuZGF0YS5UcmlhbFBhbmVsSAaIAQESRQoOcHJvZ3JhbV9zdGF0",
+            "dXMYCSABKAsyKC5kd2FuZ28ubmljb2xpdmUuY2hhdC5kYXRhLlByb2dyYW1T",
+            "dGF0dXNIB4gBARJdChdtb2RlcmF0aW9uX2Fubm91bmNlbWVudBgKIAEoCzI3",
+            "LmR3YW5nby5uaWNvbGl2ZS5jaGF0LmRhdGEuYXRvbXMuTW9kZXJhdGlvbkFu",
+            "bm91bmNlbWVudEgIiAEBQg0KC19zdGF0aXN0aWNzQgoKCF9lbnF1ZXRlQg0K",
+            "C19tb3ZlX29yZGVyQgoKCF9tYXJxdWVlQg8KDV9jb21tZW50X2xvY2tCDwoN",
+            "X2NvbW1lbnRfbW9kZUIOCgxfdHJpYWxfcGFuZWxCEQoPX3Byb2dyYW1fc3Rh",
+            "dHVzQhoKGF9tb2RlcmF0aW9uX2Fubm91bmNlbWVudGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Dwango.Nicolive.Chat.Data.AtomsReflection.Descriptor, global::Dwango.Nicolive.Chat.Data.Atoms.ModeratorReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Dwango.Nicolive.Chat.Data.NicoliveState), global::Dwango.Nicolive.Chat.Data.NicoliveState.Parser, new[]{ "Statistics", "Enquete", "MoveOrder", "Marquee", "CommentLock", "CommentMode", "TrialPanel", "FingerPrint", "ProgramStatus", "ModerationAnnouncement" }, new[]{ "Statistics", "Enquete", "MoveOrder", "Marquee", "CommentLock", "CommentMode", "TrialPanel", "FingerPrint", "ProgramStatus", "ModerationAnnouncement" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Dwango.Nicolive.Chat.Data.NicoliveState), global::Dwango.Nicolive.Chat.Data.NicoliveState.Parser, new[]{ "Statistics", "Enquete", "MoveOrder", "Marquee", "CommentLock", "CommentMode", "TrialPanel", "ProgramStatus", "ModerationAnnouncement" }, new[]{ "Statistics", "Enquete", "MoveOrder", "Marquee", "CommentLock", "CommentMode", "TrialPanel", "ProgramStatus", "ModerationAnnouncement" }, null, null, null)
           }));
     }
     #endregion
@@ -99,7 +97,6 @@ namespace Dwango.Nicolive.Chat.Data {
       commentLock_ = other.commentLock_ != null ? other.commentLock_.Clone() : null;
       commentMode_ = other.commentMode_ != null ? other.commentMode_.Clone() : null;
       trialPanel_ = other.trialPanel_ != null ? other.trialPanel_.Clone() : null;
-      fingerPrint_ = other.fingerPrint_ != null ? other.fingerPrint_.Clone() : null;
       programStatus_ = other.programStatus_ != null ? other.programStatus_.Clone() : null;
       moderationAnnouncement_ = other.moderationAnnouncement_ != null ? other.moderationAnnouncement_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -195,18 +192,6 @@ namespace Dwango.Nicolive.Chat.Data {
       }
     }
 
-    /// <summary>Field number for the "finger_print" field.</summary>
-    public const int FingerPrintFieldNumber = 8;
-    private global::Dwango.Nicolive.Chat.Data.FingerPrint fingerPrint_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Dwango.Nicolive.Chat.Data.FingerPrint FingerPrint {
-      get { return fingerPrint_; }
-      set {
-        fingerPrint_ = value;
-      }
-    }
-
     /// <summary>Field number for the "program_status" field.</summary>
     public const int ProgramStatusFieldNumber = 9;
     private global::Dwango.Nicolive.Chat.Data.ProgramStatus programStatus_;
@@ -253,7 +238,6 @@ namespace Dwango.Nicolive.Chat.Data {
       if (!object.Equals(CommentLock, other.CommentLock)) return false;
       if (!object.Equals(CommentMode, other.CommentMode)) return false;
       if (!object.Equals(TrialPanel, other.TrialPanel)) return false;
-      if (!object.Equals(FingerPrint, other.FingerPrint)) return false;
       if (!object.Equals(ProgramStatus, other.ProgramStatus)) return false;
       if (!object.Equals(ModerationAnnouncement, other.ModerationAnnouncement)) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -270,7 +254,6 @@ namespace Dwango.Nicolive.Chat.Data {
       if (commentLock_ != null) hash ^= CommentLock.GetHashCode();
       if (commentMode_ != null) hash ^= CommentMode.GetHashCode();
       if (trialPanel_ != null) hash ^= TrialPanel.GetHashCode();
-      if (fingerPrint_ != null) hash ^= FingerPrint.GetHashCode();
       if (programStatus_ != null) hash ^= ProgramStatus.GetHashCode();
       if (moderationAnnouncement_ != null) hash ^= ModerationAnnouncement.GetHashCode();
       if (_unknownFields != null) {
@@ -319,10 +302,6 @@ namespace Dwango.Nicolive.Chat.Data {
         output.WriteRawTag(58);
         output.WriteMessage(TrialPanel);
       }
-      if (fingerPrint_ != null) {
-        output.WriteRawTag(66);
-        output.WriteMessage(FingerPrint);
-      }
       if (programStatus_ != null) {
         output.WriteRawTag(74);
         output.WriteMessage(ProgramStatus);
@@ -369,10 +348,6 @@ namespace Dwango.Nicolive.Chat.Data {
         output.WriteRawTag(58);
         output.WriteMessage(TrialPanel);
       }
-      if (fingerPrint_ != null) {
-        output.WriteRawTag(66);
-        output.WriteMessage(FingerPrint);
-      }
       if (programStatus_ != null) {
         output.WriteRawTag(74);
         output.WriteMessage(ProgramStatus);
@@ -411,9 +386,6 @@ namespace Dwango.Nicolive.Chat.Data {
       }
       if (trialPanel_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(TrialPanel);
-      }
-      if (fingerPrint_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(FingerPrint);
       }
       if (programStatus_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(ProgramStatus);
@@ -475,12 +447,6 @@ namespace Dwango.Nicolive.Chat.Data {
         }
         TrialPanel.MergeFrom(other.TrialPanel);
       }
-      if (other.fingerPrint_ != null) {
-        if (fingerPrint_ == null) {
-          FingerPrint = new global::Dwango.Nicolive.Chat.Data.FingerPrint();
-        }
-        FingerPrint.MergeFrom(other.FingerPrint);
-      }
       if (other.programStatus_ != null) {
         if (programStatus_ == null) {
           ProgramStatus = new global::Dwango.Nicolive.Chat.Data.ProgramStatus();
@@ -504,11 +470,7 @@ namespace Dwango.Nicolive.Chat.Data {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -561,13 +523,6 @@ namespace Dwango.Nicolive.Chat.Data {
             input.ReadMessage(TrialPanel);
             break;
           }
-          case 66: {
-            if (fingerPrint_ == null) {
-              FingerPrint = new global::Dwango.Nicolive.Chat.Data.FingerPrint();
-            }
-            input.ReadMessage(FingerPrint);
-            break;
-          }
           case 74: {
             if (programStatus_ == null) {
               ProgramStatus = new global::Dwango.Nicolive.Chat.Data.ProgramStatus();
@@ -593,11 +548,7 @@ namespace Dwango.Nicolive.Chat.Data {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -648,13 +599,6 @@ namespace Dwango.Nicolive.Chat.Data {
               TrialPanel = new global::Dwango.Nicolive.Chat.Data.TrialPanel();
             }
             input.ReadMessage(TrialPanel);
-            break;
-          }
-          case 66: {
-            if (fingerPrint_ == null) {
-              FingerPrint = new global::Dwango.Nicolive.Chat.Data.FingerPrint();
-            }
-            input.ReadMessage(FingerPrint);
             break;
           }
           case 74: {
